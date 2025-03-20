@@ -1,4 +1,4 @@
-pipeline{
+pipeline {
     agent {
         docker {
             image 'node:18.17.1-alpine3.18'
@@ -6,31 +6,34 @@ pipeline{
     }
 
     environment {
-        FIREBASE_DEPLOY_TOKEN = credentials('firebase-token')
+        GITHUB_TOKEN = credentials('github-token')
     }
 
-    stages{
-        stage('Building'){
-            steps{
-                sh 'npm install -g firebase-tools'
+    stages {
+        stage('Checkout') {
+            steps {
+                sh 'git clone https://$GITHUB_TOKEN@github.com/JLuuc/DevOps1-Ass8.git'
+            }
+        }
+
+        stage('Building') {
+            steps {
+                sh 'npm install'
             }
         } 
 
-        stage('Testing'){
-            steps{
-                echo 'This is testing'
+        stage('Testing') {
+            steps {
+                echo 'Running tests...'
+                sh 'npm test'
             }
         }
 
-        stage('Staging'){
-            steps{
-                sh 'firebase deploy -P password-generator-staging --token "$FIREBASE_DEPLOY_TOKEN"'
-            }
-        }
-
-        stage('Production'){
-            steps{
-                sh 'firebase deploy -P password-generator-production --token "$FIREBASE_DEPLOY_TOKEN"'
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+                # Example deployment command
+                sh 'echo "Deploying to GitHub..."'
             }
         }
     }
