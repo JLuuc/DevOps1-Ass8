@@ -10,6 +10,12 @@ pipeline {
     }
 
     stages {
+        stage('Setup') {
+            steps {
+                sh 'apk add --no-cache git'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 sh 'git clone https://$GITHUB_TOKEN@github.com/JLuuc/DevOps1-Ass8.git'
@@ -37,4 +43,5 @@ pipeline {
         }
     }
 }
+
 
